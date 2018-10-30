@@ -6,12 +6,13 @@ var yml = require('yml');
 var md5 = require('md5');
 var urlencodedParser = bodyParser.urlencoded({ extended: false});
 
+var globalSettings = yml.load('config.yml');
 
 var connection = mysql.createConnection({
-  host      : "localhost",
-  user      : "root",
-  password  : "",
-  database  : "hypocom"
+  host      : globalSettings.db_host,
+  user      : globalSettings.db_user,
+  password  : globalSettings.db_password,
+  database  : globalSettings.db_name
 });
 
 var app = express();
