@@ -1,0 +1,65 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col">
+        <center>
+          <hr>
+          <h2>Vos messages personnels</h2>
+          <hr>
+        </center>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-2">
+        <div class="nav flex-column nav-pills">
+          <button class="btn btn-success" data-toggle="modal" data-target="#newMessageModal">Nouveau message</button>
+        </div>
+      </div>
+
+      <div class="col-10">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Date</th>
+              <th scope="col">Expéditeur</th>
+              <th scope="col">Objet</th>
+              <th scope="col">Actions</th>
+            </tr>
+            <tbody>
+              {% for mail in inbox_mails %}
+                <tr>
+                  <td data-toggle="modal" data-target="#viewMessageModal" data-object="{{mail.mail_object}}" data-recipient_id="{{mail.sender_id}}" data-recipient="{{mail.user_name}}" data-msg_body="{{mail.mail_content}}"><strong>{{ loop.index }} {% if mail.unread == 1 %}<span class="badge badge-warning">New</span>{% endif %}</strong></td>
+                  <td data-toggle="modal" data-target="#viewMessageModal" data-object="{{mail.mail_object}}" data-recipient_id="{{mail.sender_id}}" data-recipient="{{mail.user_name}}" data-msg_body="{{mail.mail_content}}">{% if mail.unread == 1 %}<strong>{% endif %}{{ mail.mail_date }}{% if mail.unread == 1 %}</strong>{% endif %}</td>
+                  <td data-toggle="modal" data-target="#viewMessageModal" data-object="{{mail.mail_object}}" data-recipient_id="{{mail.sender_id}}" data-recipient="{{mail.user_name}}" data-msg_body="{{mail.mail_content}}">{% if mail.unread == 1 %}<strong>{% endif %}{{ mail.user_name }}{% if mail.unread == 1 %}</strong>{% endif %}</td>
+                  <td data-toggle="modal" data-target="#viewMessageModal" data-object="{{mail.mail_object}}" data-recipient_id="{{mail.sender_id}}" data-recipient="{{mail.user_name}}" data-msg_body="{{mail.mail_content}}">{% if mail.unread == 1 %}<strong>{% endif %}{{ mail.mail_object }}{% if mail.unread == 1 %}</strong>{% endif %}</td>
+                  <td>
+                    <a href="/mails/delete/{{ mail.mail_id }}" class="btn btn-danger">
+                      <i class="fas fa-times"></i> Supprimer
+                    </a>
+                    &nbsp;
+                    <button class="btn btn-info" data-toggle="modal" data-target="#newMessageModal" data-recipient_id="{{mail.sender_id}}">
+                      <i class="fas fa-arrow-up"></i> Répondre
+                    </button>
+                    &nbsp;
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#viewMessageModal" data-object="{{mail.mail_object}}" data-recipient_id="{{mail.sender_id}}" data-recipient="{{mail.user_name}}" data-msg_body="{{mail.mail_content}}">
+                      <i class="fas fa-arrow-right"></i> Visualiser
+                    </button>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </thead>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  {% include 'mails/new_mail_modal.html.twig' %}
+  {% include 'mails/view_mail_modal.html.twig' %}
+{% endblock %}

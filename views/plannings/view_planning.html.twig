@@ -1,0 +1,83 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col">
+        <center>
+          <hr>
+          <h2>Planning de l'hypoprom's</h2>
+          <hr>
+          <p>Les manip' doivent être approuvées par l'hypoprom's (cf. onglet "manip'") avant d'être disponible dans l'outil planning</p>
+        </center>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-2">
+        <style>
+          #leftPillsNav > button
+          {
+            margin: 1% 0;
+          }
+        </style>
+        <div class="nav flex-column nav-pills" id="leftPillsNav">
+          <button class="btn btn-success" data-toggle="modal" data-target="#newEventModal">Ajouter un évènement</button>
+          <button class="btn btn-info" data-toggle="modal" data-target="#insertManipModal">Insérer une manip'</button>
+        </div>
+      </div>
+
+      <div class="col-10">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col"><strong><center>Horaire</center></strong></th>
+              <th scope="col"><center>Lundi</center></th>
+              <th scope="col"><center>Mardi</center></th>
+              <th scope="col"><center>Mercredi</center></th>
+              <th scope="col"><center>Jeudi</center></th>
+              <th scope="col"><center>Vendredi</center></th>
+              <th scope="col"><center>Samedi</center></th>
+              <th scope="col"><center>Dimanche</center></th>
+            </tr>
+            <tbody>
+              {% for h in 8..24 %}
+                  <tr>
+                    {% set hour_interval = ((h - 1)|number_format)~'h00 - ' ~ (h|number_format) ~ 'h00' %}
+                    {% set hour_interval_without_space = ((h - 1)|number_format)~'h00-' ~ (h|number_format) ~ 'h00' %}
+                    <td><center>{{ hour_interval }}</center></td>
+                    {% for d in 0..6 %}
+                      <td class="
+                        {% if current_planning[d][hour_interval_without_space].color is defined %}
+                          {% if current_planning[d][hour_interval_without_space].color == 'green' %}
+                            alert alert-success
+                          {% endif %}
+                          {% if current_planning[d][hour_interval_without_space].color == 'red' %}
+                            alert alert-danger
+                          {% endif %}
+                          {% if current_planning[d][hour_interval_without_space].color == 'yellow' %}
+                            alert alert-warning
+                          {% endif %}
+                          {% if current_planning[d][hour_interval_without_space].color == 'blue' %}
+                            alert alert-primary
+                          {% endif %}
+                        {% endif %}">
+                        {% if current_planning[d][hour_interval_without_space].manip_iteration == 0 %}
+                          {{ current_planning[d][hour_interval_without_space].event_name }}
+                        {% endif %}
+                      </td>
+                    {% endfor %}
+                  </tr>
+              {% endfor %}
+            </tbody>
+          </thead>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  {% include 'plannings/new_date_modal.html.twig' %}
+  {% include 'plannings/include_manip_modal.html.twig' %}
+{% endblock %}

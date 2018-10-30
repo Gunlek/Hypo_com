@@ -1,0 +1,55 @@
+<div class="modal fade" id="newEventModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Ajouter un évènement au planning</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="/planning/add-date" method="POST">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="eventDate">Date de l'évènement (au format dd/mm/yyyy):</label>
+            <input type="text" name="eventDate" id="eventDate" class="form-control" />
+          </div>
+
+          <div class="form-group">
+            <label for="eventHour">Horaire de l'évènement (au format hh:mm):</label>
+            <input type="text" name="eventHour" id="eventHour" class="form-control" />
+          </div>
+
+          <div class="form-group">
+            <label for="eventDuration">Durée de l'évènement (en heures):</label>
+            <input type="number" name="eventDuration" id="eventDuration" value="1" class="form-control" step="1" min="1" max="24"/>
+          </div>
+
+          <div class="form-group">
+            <label for="eventName">Nom de l'évènement:</label>
+            <input type="text" class="form-control" name="eventName" id="eventName" placeholder="Nom de l'évènement..."/>
+          </div>
+
+          <div class="form-group">
+            <label for="eventDesc">Description de l'évènement:</label>
+            <textarea name="eventDesc" id="eventDesc" class="form-control"></textarea>
+          </div>
+
+
+          <div class="form-group">
+            <label for="eventColor">Couleur sur le planning:</label>
+            <select class="form-control" id="eventColor" name="eventColor">
+              <option value="red">Rouge</option>
+              <option value="green">Vert</option>
+              <option value="yellow">Jaune</option>
+              <option value="blue">Bleu</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Fermer</button>
+          <input type="submit" class="btn btn-success" value="Ajouter au planning"/>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

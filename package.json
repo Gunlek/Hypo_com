@@ -1,0 +1,15 @@
+{
+  "name": "hypo_com",
+  "version": "0.1.0",
+  "dependencies": {
+    "cookie-session": "~2.0.0-beta.3",
+    "express": "~4.16.3",
+    "md5": "~2.2.1",
+    "mysql": "~2.16.0",
+    "npm": "^6.4.1",
+    "twig": "~1.12.0",
+    "yml": "~1.0.0"
+  },
+  "author": "Fabien Aubret <fabien.aubret@ensam.eu>",
+  "description": "Site web de com pour l'hypoprom's"
+}

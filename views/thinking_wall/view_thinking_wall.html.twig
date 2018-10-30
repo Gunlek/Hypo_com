@@ -1,0 +1,59 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col">
+        <center>
+          <hr>
+          <h2>Mur des compil'</h2>
+          <hr>
+          <p>Proposez vos idées librement et informez les autres de vos compil'</p>
+        </center>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+      {% for compil_row in compil_list %}
+        <div class="row">
+          {% for compil in compil_row %}
+            <div class="card col-3" style="width: 18rem;">
+              <div class="card-body">
+                <h5 class="card-title">{{ compil.compil_title }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ compil.compil_author }}</h6>
+                <p class="card-text">{{ compil.compil_content }}</p>
+                <a href="/thinking_wall/delete/{{ compil.compil_id }}" class="btn btn-danger" style="display: {% if compil.compil_author == user_data.username %}inline{% else %}none{% endif %};">Supprimer</a>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        <br/>
+      {% endfor %}
+
+      <div class="row">
+        <div class="card col-3" style="width: 18rem;">
+          <form action="/thinking_wall/add" method="POST">
+            <div class="card-body">
+              <div class="card-title">
+                <h5>Proposer une compil'</h5>
+                <input type="text" name="compil_title" class="form-control" placeholder="Titre de votre compil'" />
+              </div>
+              <div class="card-subtitle mb-2 text-muted">
+                <input type="text" name="compil_author" class="form-control" readonly value="{{ user_data.username }}" />
+              </div>
+              <div class="card-text">
+                <textarea class="form-control" rows="8" name="compil_content" placeholder="Contenu de votre compil'"></textarea>
+              </div>
+              <br/>
+              <button type="reset" class="btn btn-secondary">Réinitialiser</button>
+              <button type="submit" class="btn btn-success">Proposer</button>
+            </div>
+          </form>
+        </div>
+      </div>
+  </div>
+
+  {% include 'plannings/new_date_modal.html.twig' %}
+  {% include 'plannings/include_manip_modal.html.twig' %}
+{% endblock %}

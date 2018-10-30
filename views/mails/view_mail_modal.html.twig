@@ -1,0 +1,52 @@
+<div class="modal fade" id="viewMessageModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Afficher le message</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="msgRecipient">Expéditeur</label>
+          <input type="text" class="form-control" readonly id="msgRecipient"/>
+        </div>
+
+        <div class="form-group">
+          <label for="msgObject">Objet</label>
+          <input type="text" class="form-control" readonly id="msgObject"/>
+        </div>
+
+        <div class="form-group">
+          <label for="msg_body">Corps du message:</label>
+          <textarea class="form-control" readonly id="msg_body"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Fermer</button>
+        <button href="#" class="btn btn-info" id="respondButton" data-toggle="modal" data-target="#newMessageModal" data-recipient_id=""><i class="fas fa-arrow-up"></i> Répondre</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $('#viewMessageModal').on('show.bs.modal', function(e){
+    var button = $(e.relatedTarget);
+    var object = button.data('object');
+    var recipient = button.data('recipient');
+    var recipient_id = button.data('recipient_id');
+    var msg_body = button.data('msg_body');
+
+    var modal = $(this);
+    modal.find('#msgObject').val(object);
+    modal.find('#msgRecipient').val(recipient);
+    modal.find('#msg_body').val(msg_body);
+    modal.find('#respondButton').attr('data-recipient_id', recipient_id);
+  });
+
+  $('#respondButton').click(function(e){
+    $('#viewMessageModal').modal('toggle');
+  })
+</script>

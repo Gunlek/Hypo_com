@@ -1,0 +1,49 @@
+<div class="modal fade" id="newMessageModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Nouveau message</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="/mails/send_message" method="POST">
+        <div class="modal-body">
+          <input type="hidden" name="sender_id" value="{{ user_data.user_id }}" />
+          <div class="form-group">
+            <label for="msgDest">Destinataire:</label>
+            <select class="form-control" id="msgDest" name="msgDest">
+              {% for user in user_list %}
+                <option value="{{ user.user_id }}">{{ user.user_name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="msgObject">Objet:</label>
+            <input type="text" class="form-control" id="msgObject" name="msgObject" placeholder="Objet de votre message" />
+          </div>
+
+          <div class="form-group">
+            <label for="msgContent">Contenu du message:</label>
+            <textarea class="form-control" id="msgContent" name="msgContent" rows="20" placeholder="Contenu de votre message..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Fermer</button>
+          <input type="submit" class="btn btn-success"/>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $('#newMessageModal').on('show.bs.modal', function(e){
+    var button = $(e.relatedTarget);
+    var recipient = button.data('recipient_id');
+
+    var modal = $(this);
+    modal.find('#msgDest').val(recipient);
+  })
+</script>

@@ -1,0 +1,72 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col">
+        <center>
+          <hr>
+          <h2>Les manip' de votre Hypoprom's</h2>
+          <hr>
+          <p>Un badge vert <span class="badge badge-success">.</span> apparaît à gauche de la manip' lorsqu'elle a reçu plus de 50% des votes, elle est alors accessible au placement depuis l'outil Planning</p>
+        </center>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-2">
+        <div class="nav flex-column nav-pills">
+          <button class="btn btn-success" data-toggle="modal" data-target="#newManipModal">Proposer une nouvelle manip</button>
+        </div>
+      </div>
+
+      <div class="col-10">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Initiateur</th>
+              <th scope="col">Nom de la manip</th>
+              <th scope="col">Description</th>
+              <th scope="col">Vote</th>
+              <th scope="col">Action(s)</th>
+            </tr>
+            <tbody>
+              {% for manip in manip_list %}
+                <tr>
+                  <td>{% if manip.manip_vote_yes/(manip.manip_vote_yes + manip.manip_vote_no) * 100 > 50 %}<span class="badge badge-success">{{ loop.index }}</span>{% endif %} &nbsp; {{ manip.manip_date }}</td>
+                  <td>{{ manip.user_name }}</td>
+                  <td>{{ manip.manip_name }}</td>
+                  <td>{{ manip.manip_desc }}</td>
+                  <td>
+                    <div class="progress">
+                      <div class="progress-bar bg-success" role="progressbar" style="width: {{manip.manip_vote_yes/(manip.manip_vote_yes + manip.manip_vote_no) * 100 }}%" aria-valuenow="{{ manip.manip_vote_yes/(manip.manip_vote_yes + manip.manip_vote_no) * 100 }}" aria-valuemin="0" aria_valuemax="100">{{(manip.manip_vote_yes/(manip.manip_vote_yes + manip.manip_vote_no) * 100)|round}}%</div>
+                      <div class="progress-bar bg-danger" role="progressbar" style="width: {{manip.manip_vote_no/(manip.manip_vote_yes + manip.manip_vote_no) * 100 }}%" aria-valuenow="{{ manip.manip_vote_no/(manip.manip_vote_yes + manip.manip_vote_no) * 100 }}" aria-valuemin="0" aria_valuemax="100">{{(manip.manip_vote_no/(manip.manip_vote_yes + manip.manip_vote_no) * 100)|round }}%</div>
+                    </div>
+                  </td>
+                  <td>
+                    <a href="/manip/vote-for/{{ manip.manip_id }}" class="btn btn-success" data-toggle="tooltip" data-placement="top" title="Voter pour la manip'"><i class="far fa-thumbs-up"></i></a>&nbsp;
+                    <a href="/manip/vote-against/{{ manip.manip_id }}" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Voter contre la manip'"><i class="far fa-thumbs-down"></i></a>&nbsp;
+                    {% if manip.manip_creator == user_data.user_id %}
+                      <a href="/manip/delete/{{manip.manip_id}}/{{manip.manip_creator}}" class="btn btn-danger"><i class="far fa-trash-alt"></i></a>&nbsp;
+                    {% endif %}
+                  <td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </thead>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    $(function(){
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+  </script>
+
+  {% include 'manip/new_manip_modal.html.twig' %}
+{% endblock %}
