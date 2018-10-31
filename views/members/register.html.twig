@@ -11,6 +11,18 @@
         <h2>Inscription au service Hypocom</h2>
         <br/>
         <form action="/do-register" method="POST">
+          <div class="form-row">
+            <div class="col-6">
+              <label for="firstname">Prénom: </label>
+              <input type="text" class="form-control" name="firstname" placeholder="Votre prénom"/>
+            </div>
+
+            <div class="col-6">
+              <label for="lastname">Nom: </label>
+              <input type="text" class="form-control" name="lastname" placeholder="Votre nom"/>
+            </div>
+          </div>
+          <br/>
           <div class="form-group">
             <label for="username">Nom d'utilisateur: </label>
             <input type="text" class="form-control" name="username" placeholder="Votre nom d'utilisateur"/>
@@ -26,16 +38,18 @@
             <input type="tel" class="form-control" name="phone" placeholder="Votre numéro de téléphone"/>
           </div>
 
-          <div class="form-group">
-            <label for="password">Mot de passe: </label>
-            <input type="password" class="form-control" name="password" placeholder="Votre mot de passe"/>
-          </div>
+          <div class="form-row">
+            <div class="col-6">
+              <label for="password">Mot de passe: </label>
+              <input type="password" class="form-control" name="password" placeholder="Votre mot de passe"/>
+            </div>
 
-          <div class="form-group">
-            <label for="confPassword">Confirmez votre mot de passe: </label>
-            <input type="password" class="form-control" name="confPassword" placeholder="Votre mot de passe"/>
+            <div class="col-6">
+              <label for="confPassword">Confirmez votre mot de passe: </label>
+              <input type="password" class="form-control" name="confPassword" placeholder="Votre mot de passe"/>
+            </div>
           </div>
-
+          <br/>
           <div class="form-group">
             <input type="submit" class="btn btn-primary form-control" value="Inscription"/>
           </div>

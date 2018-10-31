@@ -4,6 +4,7 @@ var mysql = require('mysql');
 var bodyParser = require('body-parser');
 var yml = require('yml');
 var md5 = require('md5');
+var fileUpload = require('express-fileupload');
 var urlencodedParser = bodyParser.urlencoded({ extended: false});
 
 var globalSettings = yml.load('config.yml');
@@ -63,6 +64,7 @@ app.use(express.static(__dirname + '/public'))
       next();
   });
 })
+.use(fileUpload())
 
 .get('/', function(req, res){
   res.render('home.html.twig', {user_data: req.session.user_data});
@@ -89,6 +91,8 @@ app.use(express.static(__dirname + '/public'))
 })
 
 .post('/do-register', urlencodedParser, function(req, res){
+  var firstname = req.body.firstname;
+  var lastname = req.body.lastname;
   var username = req.body.username;
   var email = req.body.email;
   var phone = req.body.phone;
@@ -98,8 +102,10 @@ app.use(express.static(__dirname + '/public'))
   if(password == confPassword
     && username != ""
     && email != ""
-    && phone != ""){
-      connection.query('INSERT INTO users(user_name, user_email, user_phone, user_password) VALUES(?, ?, ?, ?)', [username, email, phone, password]);
+    && phone != ""
+    && firstname != ""
+    && lastname != ""){
+      connection.query('INSERT INTO users(firstname, lastname, user_name, user_email, user_phone, user_password, profile_pic) VALUES(?, ?, ?, ?, ?, ?, ?)', [firstname, lastname, username, email, phone, password, "img/default_profile_pic.png"]);
       res.redirect('/login');
     }
   else {
@@ -115,6 +121,7 @@ app.use(express.static(__dirname + '/public'))
       req.session.user_data['authenticated'] = true;
       req.session.user_data['username'] = results[0]['user_name'];
       req.session.user_data['user_id'] = parseInt(results[0]['user_id']);
+      req.session.user_data['profile_pic_link'] = results[0]['profile_pic'];
       res.redirect('/');
     }
     else{
@@ -125,6 +132,48 @@ app.use(express.static(__dirname + '/public'))
 
 .get('/require-login', function(req, res){
   res.render('members/require_login.html.twig', {user_data: req.session.user_data});
+})
+
+.get('/profile', function(req, res){
+  if(req.session.user_data.authenticated){
+    connection.query('SELECT * FROM users WHERE user_id = ?', [req.session.user_data.user_id], function(errors, results, fields){
+      if(results != null && results[0] != null)
+        res.render('members/profile.html.twig', {user_data: req.session.user_data, profile_data: results[0]});
+      else
+        res.redirect('/require-login');
+    });
+  }
+})
+
+.post('/profile/edit', urlencodedParser, function(req, res){
+  if(req.session.user_data.authenticated){
+    var firstname = req.body.firstname;
+    var lastname = req.body.lastname;
+    var username = req.body.username;
+    var email = req.body.email;
+    var phone = req.body.phone;
+    var password = req.body.password;
+    var confPassword = req.body.confPassword;
+
+    if (Object.keys(req.files).length > 0) {
+      var profile_picture_file = req.files.profile_picture;
+      var profile_picture_name = profile_picture_file.name;
+      if(profile_picture_name != ""){
+        profile_picture_file.mv('public/img/profile_pic/'+profile_picture_name);
+        req.session.user_data['profile_pic_link'] = '/img/profile_pic/'+profile_picture_name;
+        connection.query('UPDATE users SET profile_pic=? WHERE user_id=?', ["/img/profile_pic/"+profile_picture_name, req.session.user_data.user_id]);
+      }
+    }
+
+    if(password != "" && confPassword != "" && password == confPassword){
+      connection.query('UPDATE users SET user_password=? WHERE user_id=?', [md5(password), req.session.user_data.user_id]);
+    }
+
+    connection.query('UPDATE users SET user_name=?, user_email=?, user_phone=? WHERE user_id=?', [username, email, phone, req.session.user_data.user_id]);
+    res.redirect('/profile');
+  }
+  else
+    res.redirect('/require-login');
 })
 
 /* ###########################

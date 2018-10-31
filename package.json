@@ -8,7 +8,8 @@
     "mysql": "~2.16.0",
     "npm": "^6.4.1",
     "twig": "~1.12.0",
-    "yml": "~1.0.0"
+    "yml": "~1.0.0",
+    "express-fileupload": "~1.0.0"
   },
   "author": "Fabien Aubret <fabien.aubret@ensam.eu>",
   "description": "Site web de com pour l'hypoprom's"
