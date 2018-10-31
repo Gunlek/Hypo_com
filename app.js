@@ -192,7 +192,17 @@ app.use(express.static(__dirname + '/public'))
 .get('/manip/vote-for/:manip_id', function(req, res){
   if(req.session.user_data.authenticated){
     var manip_id = parseInt(req.params.manip_id);
-    connection.query('UPDATE manips SET manip_vote_yes = manip_vote_yes + 1 WHERE manip_id = ?', [manip_id]);
+    connection.query('SELECT * FROM users WHERE user_id = ?', [req.session.user_data.user_id], function(errors, results, fields){
+      if(results != null && results[0] != null){
+        if(!results[0]['has_voted'].includes("m_id:"+manip_id.toString()+",v:1;"))
+        {
+          if(results[0]['has_voted'].includes("m_id:"+manip_id.toString()+",v:0;"))
+            connection.query('UPDATE manips SET manip_vote_no = manip_vote_no - 1 WHERE manip_id = ?', [manip_id]);
+          connection.query('UPDATE manips SET manip_vote_yes = manip_vote_yes + 1 WHERE manip_id = ?', [manip_id]);
+          connection.query('UPDATE users SET has_voted = ? WHERE user_id = ?', [results[0]['has_voted'].replace("m_id:"+manip_id.toString()+",v:0;", "")+"m_id:"+manip_id.toString()+",v:1;", req.session.user_data.user_id]);
+        }
+      }
+    })
     res.redirect('/manip');
   }
   else
@@ -202,7 +212,17 @@ app.use(express.static(__dirname + '/public'))
 .get('/manip/vote-against/:manip_id', function(req, res){
   if(req.session.user_data.authenticated){
     var manip_id = parseInt(req.params.manip_id);
-    connection.query('UPDATE manips SET manip_vote_no = manip_vote_no + 1 WHERE manip_id = ?', [manip_id]);
+    connection.query('SELECT * FROM users WHERE user_id = ?', [req.session.user_data.user_id], function(errors, results, fields){
+      if(results != null && results[0] != null){
+        if(!results[0]['has_voted'].includes("m_id:"+manip_id.toString()+",v:0;"))
+        {
+          if(results[0]['has_voted'].includes("m_id:"+manip_id.toString()+",v:1;"))
+            connection.query('UPDATE manips SET manip_vote_yes = manip_vote_yes - 1 WHERE manip_id = ?', [manip_id]);
+          connection.query('UPDATE manips SET manip_vote_no = manip_vote_no + 1 WHERE manip_id = ?', [manip_id]);
+          connection.query('UPDATE users SET has_voted = ? WHERE user_id = ?', [results[0]['has_voted'].replace("m_id:"+manip_id.toString()+",v:1;", "")+"m_id:"+manip_id.toString()+",v:0;", req.session.user_data.user_id]);
+        }
+      }
+    })
     res.redirect('/manip');
   }
   else
