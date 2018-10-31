@@ -48,11 +48,11 @@
               <a href="/inbox" class="btn btn-primary">Messages [{{user_data.msg_count}}]</a>
                 &nbsp;
               <a href="/disconnect" class="btn btn-danger">Déconnexion</a>
+              &nbsp;&nbsp;
+              <a href="/profile">
+                <img src="{{ user_data.profile_pic_link }}" alt="Default profile picture" class="rounded" style="width:50px;">
+              </a>
             {% endif %}
-            &nbsp;&nbsp;
-            <a href="/profile">
-              <img src="{{ user_data.profile_pic_link }}" alt="Default profile picture" class="rounded" style="width:50px;">
-            </a>
           </div>
         </div>
       </nav>
