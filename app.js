@@ -105,7 +105,7 @@ app.use(express.static(__dirname + '/public'))
     && phone != ""
     && firstname != ""
     && lastname != ""){
-      connection.query('INSERT INTO users(firstname, lastname, user_name, user_email, user_phone, user_password, profile_pic) VALUES(?, ?, ?, ?, ?, ?, ?)', [firstname, lastname, username, email, phone, password, "img/default_profile_pic.png"]);
+      connection.query('INSERT INTO users(user_firstname, user_lastname, user_name, user_email, user_phone, user_password, profile_pic) VALUES(?, ?, ?, ?, ?, ?, ?)', [firstname, lastname, username, email, phone, password, "img/default_profile_pic.png"]);
       res.redirect('/login');
     }
   else {
